@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { ArticleDto } from './article.dto';
@@ -30,7 +30,7 @@ export class ArticlesController {
     return this.articlesService.getById(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() article: ArticleDto) {
     return this.articlesService.update(id, article);
   }

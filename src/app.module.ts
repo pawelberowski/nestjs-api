@@ -4,9 +4,20 @@ import { AppService } from './app.service';
 import { ArticlesModule } from './articles/articles.module';
 import { EmployeesModule } from './employees/employees.module';
 import { TodosModule } from './todos/todos.module';
+import * as Joi from 'joi';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ArticlesModule, EmployeesModule, TodosModule],
+  imports: [
+    ArticlesModule,
+    EmployeesModule,
+    TodosModule,
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        DATABASE_URL: Joi.string().required(),
+      }),
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
