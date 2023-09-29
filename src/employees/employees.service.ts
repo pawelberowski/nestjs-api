@@ -1,20 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Employee } from './employee';
 import { EmployeeDto } from './employee.dto';
-import { ArticleDto } from '../articles/article.dto';
+import { PrismaService } from '../database/prisma.service';
+import { Prisma } from '@prisma/client';
+import { PrismaError } from '../database/prisma-error.enum';
 
 @Injectable()
 export class EmployeesService {
-  private employees: Employee[] = [];
-  private nextCreatedEmployeeId = 1;
+  constructor(private readonly prismaService: PrismaService) {}
 
   getAll() {
-    return this.employees;
+    return this.prismaService.employee.findMany();
   }
 
-  getById(id: number) {
-    const employee = this.employees.find((item) => {
-      return item.id === id;
+  async getById(id: number) {
+    const employee = await this.prismaService.employee.findUnique({
+      where: {
+        id,
+      },
     });
     if (!employee) {
       throw new NotFoundException();
@@ -23,37 +25,48 @@ export class EmployeesService {
   }
 
   create(employee: EmployeeDto) {
-    const newEmployee: Employee = {
-      id: this.nextCreatedEmployeeId++,
-      name: employee.name,
-      position: employee.position,
-    };
-    this.employees.push(newEmployee);
-    return newEmployee;
+    return this.prismaService.employee.create({
+      data: employee,
+    });
   }
 
-  update(id: number, employee: EmployeeDto) {
-    const employeeIndex = this.employees.findIndex(
-      (employee) => employee.id === id,
-    );
-    if (employeeIndex === -1) {
-      throw new NotFoundException();
+  async update(id: number, employee: EmployeeDto) {
+    try {
+      return await this.prismaService.employee.update({
+        data: {
+          ...employee,
+          id: undefined,
+        },
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === PrismaError.RecordDoesNotExist
+      ) {
+        throw new NotFoundException();
+      }
+      throw error;
     }
-    this.employees[employeeIndex] = {
-      ...this.employees[employeeIndex],
-      name: employee.name,
-      position: employee.position,
-    };
-    return this.employees[employeeIndex];
   }
 
-  delete(id: number) {
-    const employeeIndex = this.employees.findIndex(
-      (employee) => employee.id === id,
-    );
-    if (employeeIndex === -1) {
-      throw new NotFoundException();
+  async delete(id: number) {
+    try {
+      return this.prismaService.employee.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === PrismaError.RecordDoesNotExist
+      ) {
+        throw new NotFoundException();
+      }
+      throw error;
     }
-    this.employees.splice(employeeIndex, 1);
   }
 }
