@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArticlesModule } from './articles/articles.module';
 import { EmployeesModule } from './employees/employees.module';
-import { TodosModule } from './todos/todos.module';
+import { TasksModule } from './tasks/tasks.module';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 
@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ArticlesModule,
     EmployeesModule,
-    TodosModule,
+    TasksModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
