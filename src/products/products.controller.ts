@@ -39,6 +39,11 @@ export class ProductsController {
     return this.productsService.update(id, product);
   }
 
+  @Delete('/empty-stock')
+  emptyStock() {
+    return this.productsService.emptyStock();
+  }
+
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number) {
     this.productsService.delete(id);

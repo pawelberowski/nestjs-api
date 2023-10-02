@@ -111,4 +111,14 @@ export class ProductsService {
       },
     });
   }
+
+  async emptyStock() {
+    const productsToDelete = await this.getProductsWithStock(0);
+    if (!productsToDelete[0]) {
+      throw new ConflictException('No products with empty stock');
+    }
+    productsToDelete.forEach((product) => {
+      this.delete(product.id);
+    });
+  }
 }
