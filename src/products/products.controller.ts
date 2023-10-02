@@ -10,8 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { ProductDto, ProductsQuery } from "./product.dto";
-import { number } from "joi";
+import { ProductDto, ProductsQuery } from './product.dto';
 
 @Controller('products')
 export class ProductsController {

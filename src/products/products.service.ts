@@ -102,14 +102,13 @@ export class ProductsService {
     });
   }
 
-  async getProductsWithStock(stock: number) {
-    const products = await this.prismaService.product.findMany({
+  getProductsWithStock(stock: number) {
+    return this.prismaService.product.findMany({
       where: {
         stock: {
           equals: stock,
         },
       },
     });
-    return products;
   }
 }
