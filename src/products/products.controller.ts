@@ -7,9 +7,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { ProductDto } from './product.dto';
+import { ProductDto, ProductsQuery } from "./product.dto";
+import { number } from "joi";
 
 @Controller('products')
 export class ProductsController {
@@ -21,7 +23,10 @@ export class ProductsController {
   }
 
   @Get()
-  getAll() {
+  getAll(@Query() query: ProductsQuery) {
+    if (query.stock) {
+      return this.productsService.getProductsWithStock(+query.stock);
+    }
     return this.productsService.getAll();
   }
 

@@ -3,3 +3,6 @@ export interface ProductDto {
   description: string;
   price: number;
 }
+export interface ProductsQuery {
+  stock: string;
+}

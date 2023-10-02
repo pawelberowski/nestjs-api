@@ -102,5 +102,14 @@ export class ProductsService {
     });
   }
 
-  getProductsWithStock(stock: number) {}
+  async getProductsWithStock(stock: number) {
+    const products = await this.prismaService.product.findMany({
+      where: {
+        stock: {
+          equals: stock,
+        },
+      },
+    });
+    return products;
+  }
 }
