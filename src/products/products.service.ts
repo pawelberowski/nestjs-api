@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { ProductDto } from './product.dto';
 import { Prisma } from '@prisma/client';
@@ -76,6 +80,21 @@ export class ProductsService {
     return this.prismaService.product.update({
       data: {
         stock: product.stock + 1,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  async decreaseStock(id: number) {
+    const product = await this.getById(id);
+    if (product.stock === 0) {
+      throw new ConflictException('Stock is already 0');
+    }
+    return this.prismaService.product.update({
+      data: {
+        stock: product.stock - 1,
       },
       where: {
         id,

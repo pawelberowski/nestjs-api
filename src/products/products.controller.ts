@@ -39,4 +39,14 @@ export class ProductsController {
   delete(@Param('id', ParseIntPipe) id: number) {
     this.productsService.delete(id);
   }
+
+  @Patch(':id/increase-stock')
+  increaseStock(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.increaseStock(id);
+  }
+
+  @Patch(':id/decrease-stock')
+  decreaseStock(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.decreaseStock(id);
+  }
 }
