@@ -28,3 +28,11 @@ model Employee {
   name String
   position String
 }
+
+model Product {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  price Int
+  stock Int @default(0)
+}
